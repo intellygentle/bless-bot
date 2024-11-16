@@ -143,14 +143,14 @@ async function pingNode(nodeId, proxy, ipAddress) {
 async function displayHeader() {
     const chalk = await import('chalk');
     console.log("");
-    console.log(chalk.cyan.bold(`███████╗██╗     ██╗  ██╗     ██████╗██╗   ██╗██████╗ ███████╗██████╗ `))
-    console.log(chalk.cyan.bold(`╚══███╔╝██║     ██║ ██╔╝    ██╔════╝╚██╗ ██╔╝██╔══██╗██╔════╝██╔══██╗`))
-    console.log(chalk.cyan.bold(`  ███╔╝ ██║     █████╔╝     ██║      ╚████╔╝ ██████╔╝█████╗  ██████╔╝`))
-    console.log(chalk.cyan.bold(` ███╔╝  ██║     ██╔═██╗     ██║       ╚██╔╝  ██╔══██╗██╔══╝  ██╔══██╗`))
-    console.log(chalk.cyan.bold(`███████╗███████╗██║  ██╗    ╚██████╗   ██║   ██████╔╝███████╗██║  ██║`))
-    console.log(chalk.cyan.bold(`╚══════╝╚══════╝╚═╝  ╚═╝     ╚═════╝   ╚═╝   ╚═════╝ ╚══════╝╚═╝  ╚═╝`))
-    console.log(chalk.cyan.bold(`                 Running Blockless Node BETA CLI Version             `))
-    console.log(chalk.cyan.bold(`                t.me/zlkcyber *** github.com/zlkcyber                `))
+    console.log(chalk.cyan(`███████╗██╗     ██╗  ██╗     ██████╗██╗   ██╗██████╗ ███████╗██████╗ `))
+    console.log(chalk.cyan(`╚══███╔╝██║     ██║ ██╔╝    ██╔════╝╚██╗ ██╔╝██╔══██╗██╔════╝██╔══██╗`))
+    console.log(chalk.cyan(`  ███╔╝ ██║     █████╔╝     ██║      ╚████╔╝ ██████╔╝█████╗  ██████╔╝`))
+    console.log(chalk.cyan(` ███╔╝  ██║     ██╔═██╗     ██║       ╚██╔╝  ██╔══██╗██╔══╝  ██╔══██╗`))
+    console.log(chalk.cyan(`███████╗███████╗██║  ██╗    ╚██████╗   ██║   ██████╔╝███████╗██║  ██║`))
+    console.log(chalk.cyan(`╚══════╝╚══════╝╚═╝  ╚═╝     ╚═════╝   ╚═╝   ╚═════╝ ╚══════╝╚═╝  ╚═╝`))
+    console.log(chalk.cyan(`                 Running Blockless Node BETA CLI Version             `))
+    console.log(chalk.cyan(`                t.me/zlkcyber *** github.com/zlkcyber                `))
     console.log("");
 }
 
