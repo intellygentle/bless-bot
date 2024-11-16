@@ -133,8 +133,8 @@ async function pingNode(nodeId, proxy, ipAddress) {
     });
     const data = await response.json();
     
-    const lastPing = data.pings[data.pings.length - 1].timestamp;
-    const logMessage = `[${new Date().toISOString()}] Ping response, ID: ${chalk.default.green(data._id)}, NodeID: ${chalk.default.green(data.nodeId)}, Last Ping: ${chalk.default.yellow(lastPing)}, Proxy: ${proxy}, IP: ${ipAddress}`;
+    const status = data.status;
+    const logMessage = `[${new Date().toISOString()}] Ping response, NodeID: ${chalk.default.green(nodeId)}, Status: ${chalk.default.yellow(status)}, Proxy: ${proxy}, IP: ${ipAddress}`;
     console.log(logMessage);
     
     return data;
