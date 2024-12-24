@@ -1,7 +1,7 @@
 const crypto = require('crypto');
 const fs = require('fs');
 const readline = require('readline');
-
+//
 function getRandomHardwareIdentifier() {
     const randomCpuArchitecture = Math.random() > 0.5 ? 'x64' : 'x86';
     const randomCpuModel = `Fake CPU Model ${Math.floor(Math.random() * 1000)}`;

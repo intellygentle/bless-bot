@@ -369,7 +369,7 @@ async function processNode(nodeId, hardwareId, proxy, ipAddress) {
         console.error(`[${new Date().toISOString()}] Error occurred for nodeId: ${nodeId}, restarting process: ${error.message}`);
     }
 }
-
+//
 async function runAll(initialRun = true) {
     try {
         if (initialRun) {
