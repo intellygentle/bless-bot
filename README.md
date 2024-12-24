@@ -3,6 +3,13 @@
 ## Description
 This script automates network or node operations for Blockless Bless Network Bot.
 
+## Update
+
+- if you already generated pubkey using sc before just retire it
+- must generate pubkey manually at extension bless network
+- hardwareId is can generate from sc, or just paste from extension bless network
+- input manually `id.txt` with your pubkey and hardwareid
+
 ## Features
 - **Automated node interaction**
 - **Multi NodeID**
@@ -40,7 +47,7 @@ This script automates network or node operations for Blockless Bless Network Bot
 	```bash
 	localStorage.getItem('B7S_AUTH_TOKEN')
 	```
-3. Create your node id and hardware id
+3. Create hardware id
 - you can automatically create it with this command
     ```
     node setup.js
@@ -50,9 +57,13 @@ This script automates network or node operations for Blockless Bless Network Bot
  	12D3Koxxxxxxxxxxxx3ws:e938610xxxxxxxxxxxx
 	12D3Koxxxxxxxxxxxx58o:221610xxxxxxxxxxxxx
  	```
-	
-4. If you want to use `proxy`, edit `proxy.txt` and add your proxy in there. Make sure total proxy is same with your total `nodeid(pubkey):hardwareid` that you put in `id.txt` 
-5. Run the script:
+4. put your pubkey you get from extension
+	```bash
+	nano id.txt
+	```
+
+5. If you want to use `proxy`, edit `proxy.txt` and add your proxy in there. Make sure total proxy is same with your total `nodeid(pubkey):hardwareid` that you put in `id.txt` 
+6. Run the script:
 	```bash
 	node main.js
 	```
