@@ -408,5 +408,5 @@ async function runAll(initialRun = true) {
         console.error(chalk.default.yellow(`[${new Date().toISOString()}] An error occurred: ${error.message}`));
     }
 }
-
+// run
 runAll();
