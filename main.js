@@ -190,7 +190,7 @@ async function stopSession(nodeId, proxy) {
     console.log(`[${new Date().toISOString()}] stop session response:`, data);
     return data;
 }
-async function pingNode(nodeId, proxy, ipAddress, isB7SConnected = false) {
+async function pingNode(nodeId, proxy, ipAddress, isB7SConnected) {
     const fetch = await loadFetch();
     const chalk = await import('chalk');
     const authToken = await readAuthToken();
@@ -325,31 +325,34 @@ async function shutdownAllNodes() {
 async function processNode(nodeId, hardwareId, proxy, ipAddress) {
     activeNodes.push({ nodeId, proxy });
     let isConnected = false;
+
     try {
         console.log(`[${new Date().toISOString()}] Processing nodeId: ${nodeId}, hardwareId: ${hardwareId}, IP: ${ipAddress}`);
-
-        const registrationResponse = await registerNode(nodeId, hardwareId, ipAddress, proxy);
-        console.log(`[${new Date().toISOString()}] Node registration completed for nodeId: ${nodeId}. Response:`, registrationResponse);
-
-        const startSessionResponse = await startSession(nodeId, proxy);
-        console.log(`[${new Date().toISOString()}] Session started for nodeId: ${nodeId}. Response:`, startSessionResponse);
-
         isConnected = await checkNode(nodeId, proxy);
+        if (!isConnected) {
+            console.log(`[${new Date().toISOString()}] Node nodeId: ${nodeId} is not connected.`);
+            try {
+                console.log(`[${new Date().toISOString()}] Starting session for nodeId: ${nodeId}`);
+                await registerNode(nodeId, hardwareId, ipAddress, proxy);
+                await startSession(nodeId, proxy);
+            } catch (error) {
+                console.error(`[${new Date().toISOString()}] Error Starting session for nodeId: ${nodeId}. Error:`, error.message);
+            }
+        }
         console.log(`[${new Date().toISOString()}] Sending initial ping for nodeId: ${nodeId}`);
         await pingNode(nodeId, proxy, ipAddress, isConnected);
 
-        const pingInterval = setInterval(async () => {
+        setInterval(async () => {
             try {
                 console.log(`[${new Date().toISOString()}] Sending ping for nodeId: ${nodeId}`);
-                await pingNode(nodeId, proxy, ipAddress);
                 isConnected = await checkNode(nodeId, proxy);
+                await pingNode(nodeId, proxy, ipAddress, isConnected);
             } catch (error) {
                 console.error(`[${new Date().toISOString()}] Error during ping for nodeId: ${nodeId}: ${error.message}`);
-                clearInterval(pingInterval);
             }
         }, 10 * 60 * 1000);
 
-        const healthCheckInterval = setInterval(async () => {
+        setInterval(async () => {
             try {
                 console.log(`[${new Date().toISOString()}] Sending Health Check for nodeId: ${nodeId}`);
                 await heathCheck(nodeId, proxy);
@@ -358,17 +361,26 @@ async function processNode(nodeId, hardwareId, proxy, ipAddress) {
                 isConnected = await checkNode(nodeId, proxy);
 
                 if (!isConnected) {
-                    clearInterval(pingInterval);
-                    clearInterval(healthCheckInterval);
+                    console.log(`[${new Date().toISOString()}] Node nodeId: ${nodeId} is not connected.`);
+                    try {
+                        await stopSession(nodeId, proxy);
+                        console.log(`[${new Date().toISOString()}] Restarting session for nodeId: ${nodeId}`);
+                        await registerNode(nodeId, hardwareId, ipAddress, proxy);
+                        await startSession(nodeId, proxy);
+                    } catch (error) {
+                        console.error(`[${new Date().toISOString()}] Error Restarting session for nodeId: ${nodeId}. Error:`, error.message);
+                    }
                 }
             } catch (error) {
                 console.error(`[${new Date().toISOString()}] Error during Health Check for nodeId: ${nodeId}: ${error.message}`);
             }
         }, 60 * 1000);
+
     } catch (error) {
         console.error(`[${new Date().toISOString()}] Error occurred for nodeId: ${nodeId}, restarting process: ${error.message}`);
     }
 }
+
 //
 async function runAll(initialRun = true) {
     try {
