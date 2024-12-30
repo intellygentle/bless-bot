@@ -46,17 +46,21 @@ async function promptUseProxy() {
 }
 
 async function fetchIpAddress(fetch, agent) {
+    // Use the provided agent if it exists, otherwise use the user's network IP
     const response = await fetch(ipServiceUrl, {
         headers: {
             Accept: "application/json",
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36",
         },
-        agent,
+        agent: agent || undefined, // If no agent (proxy), use the default network
     });
     const data = await response.json();
     console.log(`[${new Date().toISOString()}] IP fetch response:`, data?.ip);
     return data?.ip || '0.0.0.0';
 }
+
+// ... (keep other functions unchanged)
+
 function getRandomElement(arr) {
     return arr[Math.floor(Math.random() * arr.length)];
 }
@@ -283,16 +287,17 @@ async function heathCheck(nodeId, proxy) {
 }
 async function displayHeader() {
 
-    console.log("");
-    console.log(`███████╗██╗     ██╗  ██╗     ██████╗██╗   ██╗██████╗ ███████╗██████╗ `)
-    console.log(`╚══███╔╝██║     ██║ ██╔╝    ██╔════╝╚██╗ ██╔╝██╔══██╗██╔════╝██╔══██╗`)
-    console.log(`  ███╔╝ ██║     █████╔╝     ██║      ╚████╔╝ ██████╔╝█████╗  ██████╔╝`)
-    console.log(` ███╔╝  ██║     ██╔═██╗     ██║       ╚██╔╝  ██╔══██╗██╔══╝  ██╔══██╗`)
-    console.log(`███████╗███████╗██║  ██╗    ╚██████╗   ██║   ██████╔╝███████╗██║  ██║`)
-    console.log(`╚══════╝╚══════╝╚═╝  ╚═╝     ╚═════╝   ╚═╝   ╚═════╝ ╚══════╝╚═╝  ╚═╝`)
-    console.log(`                 Running Blockless Node BETA CLI Version             `)
-    console.log(`                t.me/zlkcyber *** github.com/zlkcyber                `)
-    console.log("");
+    console.log("");                                   
+    console.log(`                 ██╗███╗   ██╗████████╗███████╗██╗     ██╗          `)
+    console.log(`                 ██║████╗  ██║╚══██╔══╝██╔════╝██║     ██║          `)
+    console.log(`                 ██║██╔██╗ ██║   ██║   █████╗  ██║     ██║          `)
+    console.log(`                 ██║██║╚██╗██║   ██║   ██╔══╝  ██║     ██║          `)
+    console.log(`                 ██║██║ ╚████║   ██║   ███████╗███████╗███████╗     `)
+    console.log(`                 ╚═╝╚═╝  ╚═══╝   ╚═╝   ╚══════╝╚══════╝╚══════╝     `)
+                                                               
+    console.log(`                 Running Blockless Node BETA CLI Version            `)
+    console.log(`                 Credit *** github.com/zlkcyber                     `)
+    console.log("                 Reach out to   intellygently on X                  ");
 }
 
 let activeNodes = [];
@@ -381,7 +386,7 @@ async function processNode(nodeId, hardwareId, proxy, ipAddress) {
     }
 }
 
-//
+
 async function runAll(initialRun = true) {
     try {
         if (initialRun) {
@@ -390,7 +395,7 @@ async function runAll(initialRun = true) {
         }
 
         const ids = await readNodeAndHardwareIds();
-        const proxies = await readProxies();
+        const proxies = useProxy ? await readProxies() : [];
 
         if (useProxy && proxies.length < ids.length) {
             throw new Error((await import('chalk')).default.yellow(`Number of proxies (${proxies.length}) does not match number of nodeId:hardwareId pairs (${ids.length})`));
@@ -399,7 +404,10 @@ async function runAll(initialRun = true) {
         for (let i = 0; i < ids.length; i++) {
             const { nodeId, hardwareId } = ids[i];
             const proxy = useProxy ? proxies[i] : null;
-            const ipAddress = useProxy ? await fetchIpAddress(await loadFetch(), proxy ? new HttpsProxyAgent(proxy) : null) : null;
+            const fetch = await loadFetch();
+            
+            // Fetch IP address whether proxy is used or not
+            const ipAddress = await fetchIpAddress(fetch, proxy ? new HttpsProxyAgent(proxy) : null);
 
             await processNode(nodeId, hardwareId, proxy, ipAddress);
         }
@@ -408,5 +416,6 @@ async function runAll(initialRun = true) {
         console.error(chalk.default.yellow(`[${new Date().toISOString()}] An error occurred: ${error.message}`));
     }
 }
+
 // run
 runAll();
