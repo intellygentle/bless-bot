@@ -17,6 +17,8 @@ This script automates network or node operations for Blockless Bless Network Bot
 
 ## Prerequisites
 - [Node.js](https://nodejs.org/)
+- Termux App 
+- [install ubuntu on termux](https://x.com/Intellygentle/status/1866530004827324680)
 
 ## Installation
 
