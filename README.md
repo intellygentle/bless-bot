@@ -1,5 +1,5 @@
 # Blockless Bless Network Bot 
-
+- [Register an account](https://bless.network/dashboard?ref=2CHIH2)
 ## Description
 This script automates network or node operations for Blockless Bless Network Bot.
 
